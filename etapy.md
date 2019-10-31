@@ -53,5 +53,6 @@ Ponadto, do aplikacji należy dołączyć testy jednostkowe napisanych funkcji i
 
 
 Powodzenia!
+
 ![](http://static.skaip.org/img/emoticons/180x180/f6fcff/hendance.gif)
  
