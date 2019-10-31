@@ -1,0 +1,20 @@
+{
+  "name": "Three separate prizes, one for each winner",
+  "prizes": [
+    {
+      "id": 1,
+      "name": "Gold medal",
+      "amount": 1
+    },
+    {
+      "id": 2,
+      "name": "Silver medal",
+      "amount": 1
+    },
+    {
+      "id": 3,
+      "name": "Bronze medal",
+      "amount": 1
+    }
+  ]
+}

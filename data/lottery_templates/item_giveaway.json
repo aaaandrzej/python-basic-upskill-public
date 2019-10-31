@@ -1,0 +1,10 @@
+{
+  "name": "Item giveaway: 5 identical prizes",
+  "prizes": [
+    {
+      "id": 1,
+      "name": "Annual Vim subscription",
+      "amount": 5
+    }
+  ]
+}
