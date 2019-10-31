@@ -52,4 +52,6 @@ Ponadto, do aplikacji należy dołączyć testy jednostkowe napisanych funkcji i
 - zewnętrzny pakiet `pytest` (https://docs.pytest.org/en/latest/)
 
 
-
+Powodzenia!
+![](https://www.google.com/url?sa=i&source=imgres&cd=&cad=rja&uact=8&ved=2ahUKEwi02NT-3cblAhVilIsKHYcvDQoQjRx6BAgBEAQ&url=http%3A%2F%2Fwww.skaip.org%2Fhendance-emoticon&psig=AOvVaw1TSrkRhh6JSKgrUxdksJuA&ust=1572619415944446)
+ 
