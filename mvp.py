@@ -27,7 +27,6 @@ def open_file(filename, extension):
             return csv_list
 
 
-
 def check_file_extension(filename):
     index_dot = filename.rfind(".")
     extension = filename[index_dot+1:]
@@ -51,6 +50,7 @@ def draw_participants_json(json_content, how_many):
 
 
 def draw_participants_csv(csv_content, how_many):
+    # poszukać czegoś specjalnie do csv bo na bank jest...
     participants_range = 0
     for e in csv_content:
         first_coma_index = e.find(",")
@@ -59,19 +59,16 @@ def draw_participants_csv(csv_content, how_many):
             participants_range = participant_id
 
     winners_ids = random.sample(range(1, participants_range), how_many)
-    print(winners_ids)
-    #
+    # print(winners_ids)
+
     print(f"Zwycięska {how_many} to:")
     for g in csv_content:
         first_coma_index = g.find(",")
         participant_id = int(g[:first_coma_index])
         if participant_id in winners_ids:
-            # winner_name = g["first_name"]
-            # winner_surname = g["last_name"]
             winner = g[first_coma_index+1:]
             winner_no_coma = winner.replace(",", " ")
             print(winner_no_coma)
-
 
 
 if __name__ == "__main__":
@@ -81,7 +78,14 @@ if __name__ == "__main__":
 
     file_extension = check_file_extension(file_temp)
     file_content = open_file(file_input, file_extension)
+
     # print(file_content)
     # print(check_file_extension(file_input))
-    # draw_participants_json(file_content, 3)
-    draw_participants_csv(file_content, 3)
+
+    if file_extension == "json":
+        print(file_temp, "\n")
+        draw_participants_json(file_content, 4)
+
+    if file_extension == "csv":
+        print(file_temp, "\n")
+        draw_participants_csv(file_content, 4)
