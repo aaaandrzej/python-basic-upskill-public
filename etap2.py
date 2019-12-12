@@ -1,46 +1,27 @@
-import pathlib, json, csv
-import random
-from data import *
+from mvp import *
 
 
-class Participant:
-    def __init__(self, id, first_name, last_name, weight=None):
+class Prize:
+    def __init__(self, id, name, amount):
         self.id = id
-        self.first_name = first_name
-        self.last_name = last_name
-        self.weight = weight
+        self.name = name
+        self.amount = amount
 
     def __repr__(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.name}, {self.amount}"
 
 
-def open_file(filename, extension):
-    if extension == "json":
-        with open(filename) as json_opened:
-            json_content = json.load(json_opened)
-            participants_list_objects = []
-            for e in json_content:
-                participants_list_objects.append(Participant(**e))
-
-        return participants_list_objects
-
-    elif extension == "csv":
-        with open(filename, newline="") as csv_opened:
-            csv_content = csv.reader(csv_opened)
-            participants_list_objects = []
-
-            for row in csv_content:
-                a = Participant(*row)
-                participants_list_objects.append(a)
-                # próbowałem to zrobić z ** ale wywalało błędy, więc obszedłem to tak o..
-
-            return participants_list_objects[1:]  # pomijamy pierwszy wiersz
+class Winner(Participant):
+    pass
 
 
-def check_file_extension(filename):
-    index_dot = filename.rfind(".")
-    extension = filename[index_dot+1:]
-    return extension
+def extract_lottery_scheme(filename):
+    with open(filename) as lottery_scheme_file:
+        lottery_scheme = json.load(lottery_scheme_file)
+        lottery_prizes_list = []
+        lottery_prizes = lottery_scheme["prizes"]
+        for prize in lottery_prizes:
+            return Prize(**prize)
 
 
 def draw_participants(participants_list, how_many):
@@ -58,8 +39,13 @@ if __name__ == "__main__":
 
     how_many_winners = 4
 
+    lottery_scheme = "data/lottery_templates/item_giveaway.json"
+
     file_extension = check_file_extension(file_temp)
     file_content = open_file(file_input, file_extension)
 
     print(file_temp, "\n")
     draw_participants(file_content, how_many_winners)
+    print()
+    prizes = extract_lottery_scheme(lottery_scheme)
+    print(prizes)
