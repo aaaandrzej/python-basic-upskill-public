@@ -44,7 +44,7 @@ def check_file_extension(filename):
 
 
 def draw_participants(participants_list, how_many):
-    winners_list = random.choices(participants_list, k=how_many)
+    winners_list = random.sample(participants_list, k=how_many)
 
     print(f"Zwycięska {how_many} to:")
     for winner in winners_list:
