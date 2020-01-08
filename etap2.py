@@ -8,28 +8,42 @@ class Prize:
         self.amount = amount
 
     def __repr__(self):
-        return f"{self.name}, {self.amount}"
+        return f"{self.name}"
 
 
 class Winner(Participant):
-    pass
+    def __init__(self, id, first_name, last_name, prize):
+        self.id = id
+        self.first_name = first_name
+        self.last_name = last_name
+        self.prize = prize
+
+    def __repr__(self):
+        return f"{self.first_name} {self.last_name}"
 
 
 def extract_lottery_scheme(filename):
     with open(filename) as lottery_scheme_file:
         lottery_scheme = json.load(lottery_scheme_file)
         lottery_prizes_list = []
-        lottery_prizes = lottery_scheme["prizes"]
-        for prize in lottery_prizes:
-            return Prize(**prize)
+        for prize in lottery_scheme["prizes"]:
+            for amount in range(prize["amount"]):
+                lottery_prizes_list.append(Prize(**prize))
+        return lottery_prizes_list
 
 
-def draw_participants(participants_list, how_many):
-    winners_list = random.choices(participants_list, k=how_many)
+def draw_participants(participants_list, how_many, prizes):
+    winners_list = random.sample(participants_list, k=how_many)
 
     print(f"Zwycięska {how_many} to:")
     for winner in winners_list:
-        print(winner)
+        try:
+            indexxx = winners_list.index(winner)
+            prize = prizes[indexxx]
+        except IndexError:
+            prize = "Audience Prize"
+        winner_ = f"{winner} - {prize}"
+        print(winner_)
 
 
 if __name__ == "__main__":
@@ -39,13 +53,15 @@ if __name__ == "__main__":
 
     how_many_winners = 4
 
+    # lottery_scheme = "data/lottery_templates/separate_prizes.json"
     lottery_scheme = "data/lottery_templates/item_giveaway.json"
+
 
     file_extension = check_file_extension(file_temp)
     file_content = open_file(file_input, file_extension)
 
     print(file_temp, "\n")
-    draw_participants(file_content, how_many_winners)
-    print()
+
     prizes = extract_lottery_scheme(lottery_scheme)
-    print(prizes)
+
+    draw_participants(file_content, how_many_winners, prizes)
