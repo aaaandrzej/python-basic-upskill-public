@@ -45,7 +45,7 @@ def draw_participants(participants_list, how_many, prizes, file_output):
             indexxx = winners_list.index(winner)
             prize = prizes[indexxx]
         except IndexError:
-            prize = "Audience Prize"
+            prize = "Audience Prize" # todo ma być tyle zwycięzców co nagród i koniec, bez aidience prize
         winners_with_prizes.append(Winner(winner, prize))
 
     print(f"Zwycięska {how_many} to:")
@@ -66,7 +66,7 @@ def draw_participants(participants_list, how_many, prizes, file_output):
 def who_won_lottery(participants, scheme, output):
     click.echo("Witamy w loterii")
 
-    how_many_winners = 4
+    how_many_winners = 11
 
     file_extension = check_file_extension(participants)
     file_content = open_file(participants, file_extension)

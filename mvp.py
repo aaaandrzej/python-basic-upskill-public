@@ -4,7 +4,7 @@ from data import *
 
 
 class Participant:
-    def __init__(self, id, first_name, last_name, weight=None):
+    def __init__(self, id, first_name, last_name, weight=None):  # todo weight = 1
         self.id = id
         self.first_name = first_name
         self.last_name = last_name
@@ -14,7 +14,7 @@ class Participant:
         return f"{self.first_name} {self.last_name}"
 
 
-def open_file(filename, extension):
+def open_file(filename, extension):  # TODO rozbić na 2 funkcje, poza tym domyślnie powinien być JSON
     if extension == "json":
         with open(filename) as json_opened:
             json_content = json.load(json_opened)
@@ -53,10 +53,10 @@ def draw_participants(participants_list, how_many):
 
 if __name__ == "__main__":
     file_dir = pathlib.Path("data")
-    file_temp = "participants2.json"
+    file_temp = "participants1.csv"
     file_input = f"{file_dir}/{file_temp}"
 
-    how_many_winners = 4
+    how_many_winners = 11  # TODO bug jeśli jest ich więcej niż mamy
 
     file_extension = check_file_extension(file_temp)
     file_content = open_file(file_input, file_extension)
