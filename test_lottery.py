@@ -2,7 +2,7 @@ import unittest
 from lottery import Participant, Prize, Winner
 
 
-class TestClasses(unittest.TestCase):
+class TestClasses(unittest.TestCase): # todo zmienić na pytest
     def test_participant(self):
         p = Participant(1, "Jan", "Nowak", 2)
         self.assertEqual(p.id, 1)

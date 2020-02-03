@@ -38,7 +38,7 @@ class Winner:
         return {"name": self.name, "prize": self.prize}
 
 
-def extract_winners_from_json(filename):
+def extract_participants_from_json(filename):
     with open(filename) as json_opened:
         json_content = json.load(json_opened)
         participants_list_objects = []
@@ -48,7 +48,7 @@ def extract_winners_from_json(filename):
     return participants_list_objects
 
 
-def extract_winners_from_csv(filename):
+def extract_participants_from_csv(filename):
     with open(filename, newline="") as csv_opened:
         csv_content = csv.reader(csv_opened)
         participants_list_objects = []
@@ -66,7 +66,7 @@ def extract_file_extension(filename):
     return extension
 
 
-def extract_lottery_scheme(filename):
+def extract_lottery_scheme(filename):  # TODO obtestować to
     with open(filename) as lottery_scheme_file:
         lottery_scheme = json.load(lottery_scheme_file)
         lottery_prizes_list = []
@@ -76,8 +76,8 @@ def extract_lottery_scheme(filename):
         return lottery_prizes_list
 
 
-def draw_participants(participants_list, how_many, prizes, file_output):
-    if how_many > len(prizes):
+def draw_winners(participants_list, how_many, prizes, file_output):  # todo weight ogarnąć z choices i while
+    if how_many > len(prizes):  # TODO wywalić how many i ustalić na len prizes
         raise ValueError(f"Nie może być więcej zwycięzców ({how_many}) niż mamy nagród ({len(prizes)}), soraski")
 
     winners_list = random.sample(participants_list, k=how_many)
@@ -94,13 +94,13 @@ def draw_participants(participants_list, how_many, prizes, file_output):
         print(winner_prize)
         winners_with_prizes_to_json.append(winner_prize.to_dict())
 
-    with open(file_output, 'w', encoding='utf-8') as file:
+    with open(file_output, 'w', encoding='utf-8') as file:  # todo rozbić na 3 funkcje, draw, print, files
         file.write(json.dumps(str(winners_with_prizes_to_json)))
 
 
 @click.command()
 @click.option('--participants', default="data/participants1.json",
-              help='Filename with participants, default is data/participants1.json')
+              help='Filename with participants, default is data/participants1.json')  # TODO argument pozycyjny
 @click.option('--file_extension', default="json",
               help='Extension of the filename with participants, default is json')
 @click.option('--scheme', default="data/lottery_templates/item_giveaway.json",
@@ -111,11 +111,11 @@ def draw_participants(participants_list, how_many, prizes, file_output):
 def who_won_lottery(participants, file_extension, scheme, how_many_winners, output):
     click.echo("Witamy w loterii")
 
-    file_content = extract_winners_from_json(participants)
+    file_content = extract_participants_from_json(participants)
 
     prizes = extract_lottery_scheme(scheme)
 
-    draw_participants(file_content, how_many_winners, prizes, output)
+    draw_winners(file_content, how_many_winners, prizes, output)
 
     result = f"(wylosowano z {participants} z użyciem {scheme} i zapisano do {output})"
     print(result)
@@ -128,7 +128,7 @@ if __name__ == "__main__":
     file_input = f"{file_dir}/{file_temp}"
     file_output = f"{file_dir}/result.json"
 
-    how_many_winners = 5
+    how_many_winners = 3
 
     # lottery_scheme = "data/lottery_templates/separate_prizes.json"
     lottery_scheme = "data/lottery_templates/item_giveaway.json"
@@ -136,15 +136,15 @@ if __name__ == "__main__":
     file_extension = extract_file_extension(file_temp)
 
     if file_extension == "json":
-        file_content = extract_winners_from_json(file_input)
+        file_content = extract_participants_from_json(file_input)
     elif file_extension == "csv":
-        file_content = extract_winners_from_csv(file_input)
+        file_content = extract_participants_from_csv(file_input)
 
     print(file_temp, "\n")
 
     prizes = extract_lottery_scheme(lottery_scheme)
 
-    draw_participants(file_content, how_many_winners, prizes, file_output)
+    draw_winners(file_content, how_many_winners, prizes, file_output)
 # '''
 # start script
 #     who_won_lottery()
