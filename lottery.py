@@ -14,6 +14,7 @@ class Participant:
 
     def __repr__(self):
         return f"{self.first_name} {self.last_name}"
+        # return f"{self.first_name} {self.last_name} (weight={self.weight})"
 
 
 class Prize:
@@ -60,12 +61,6 @@ def extract_participants_from_csv(filename):
         return participants_list_objects[1:]
 
 
-def extract_file_extension(filename):
-    index_dot = filename.rfind(".")
-    extension = filename[index_dot+1:]
-    return extension
-
-
 def extract_lottery_scheme(filename):  # TODO obtestować to
     with open(filename) as lottery_scheme_file:
         lottery_scheme = json.load(lottery_scheme_file)
@@ -76,24 +71,44 @@ def extract_lottery_scheme(filename):  # TODO obtestować to
         return lottery_prizes_list
 
 
-def draw_winners(participants_list, prizes, file_output):  # todo weight ogarnąć z choices i while
+def draw_winners(participants_list, prizes):
 
-    winners_list = random.sample(participants_list, k=len(prizes))
+    participants_list_weights = []
+
+    for winner in participants_list:
+        participants_list_weights.append(int(winner.weight))
+
+    winners_list = []
+
+    while len(winners_list) < len(prizes):
+        winner = random.choices(participants_list, weights=participants_list_weights, k=1)
+        if winner not in winners_list:
+            winners_list.append(winner[0])
+
     winners_with_prizes = []
-    winners_with_prizes_to_json = []
 
-    for winner in winners_list:
-        index = winners_list.index(winner)
-        prize = prizes[index]
+    for prize in prizes:
+        index = prizes.index(prize)
+        winner = winners_list[index]
         winners_with_prizes.append(Winner(winner, prize))
 
-    print(f"Zwycięska {len(prizes)} to:")
+    return winners_with_prizes
+
+
+def write_winners_to_json(winners_with_prizes, file_output):
+    winners_with_prizes_to_json = []
+
     for winner_prize in winners_with_prizes:
-        print(winner_prize)
         winners_with_prizes_to_json.append(winner_prize.to_dict())
 
-    with open(file_output, 'w', encoding='utf-8') as file:  # todo rozbić na 3 funkcje, draw, print, files
+    with open(file_output, 'w', encoding='utf-8') as file:
         file.write(json.dumps(str(winners_with_prizes_to_json)))
+
+
+def print_winners(winners_with_prizes):
+    print(f"Zwycięska {len(winners_with_prizes)} to:")
+    for winner_prize in winners_with_prizes:
+        print(winner_prize)
 
 
 @click.command()
@@ -113,36 +128,44 @@ def who_won_lottery(file_input, file_extension, scheme, file_output):
 
     prizes = extract_lottery_scheme(scheme)
 
-    draw_winners(file_content, prizes, file_output)
+    winners_with_prizes = draw_winners(file_content, prizes)
 
-    result = f"(wylosowano z {file_input} z użyciem {scheme} i zapisano do {file_output})"
-    print(result)
+    write_winners_to_json(winners_with_prizes, file_output)
+
+    print_winners(winners_with_prizes)
+
+    summary = f"(wylosowano z {file_input} z użyciem {scheme} i zapisano do {file_output})"
+
+    print(summary)
 
 
 if __name__ == "__main__":
-    '''
-    file_dir = pathlib.Path("data")
-    file_temp = "participants2.csv"
-    file_input = f"{file_dir}/{file_temp}"
-    file_output = f"{file_dir}/result.json"
 
-    how_many_winners = 3
+    who_won_lottery()  # file_input argument required, e.g.: "python lottery.py participants1.json"
 
-    # lottery_scheme = "data/lottery_templates/separate_prizes.json"
-    lottery_scheme = "data/lottery_templates/item_giveaway.json"
-
-    file_extension = extract_file_extension(file_temp)
+'''
+# scripts for testing only - commented by default
+    file_input="data/participants2.json"
+    file_extension="json"
+    scheme="data/lottery_templates/item_giveaway.json"
+    file_output="data/result.json"
 
     if file_extension == "json":
         file_content = extract_participants_from_json(file_input)
     elif file_extension == "csv":
         file_content = extract_participants_from_csv(file_input)
 
-    print(file_temp, "\n")
+    prizes = extract_lottery_scheme(scheme)
 
-    prizes = extract_lottery_scheme(lottery_scheme)
+    winners_with_prizes = draw_winners(file_content, prizes)
 
-    draw_winners(file_content, how_many_winners, prizes, file_output)
+    # write_winners_to_json(winners_with_prizes, file_output)
+    #
+    # print_winners(winners_with_prizes)
+    #
+    # summary = f"(wylosowano z {file_input} z użyciem {scheme} i zapisano do {file_output})"
+    #
+    # print(summary)
+
+    print(winners_with_prizes)
 '''
-# start script
-    who_won_lottery()
