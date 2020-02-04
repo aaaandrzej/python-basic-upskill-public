@@ -76,11 +76,9 @@ def extract_lottery_scheme(filename):  # TODO obtestować to
         return lottery_prizes_list
 
 
-def draw_winners(participants_list, how_many, prizes, file_output):  # todo weight ogarnąć z choices i while
-    if how_many > len(prizes):  # TODO wywalić how many i ustalić na len prizes
-        raise ValueError(f"Nie może być więcej zwycięzców ({how_many}) niż mamy nagród ({len(prizes)}), soraski")
+def draw_winners(participants_list, prizes, file_output):  # todo weight ogarnąć z choices i while
 
-    winners_list = random.sample(participants_list, k=how_many)
+    winners_list = random.sample(participants_list, k=len(prizes))
     winners_with_prizes = []
     winners_with_prizes_to_json = []
 
@@ -89,7 +87,7 @@ def draw_winners(participants_list, how_many, prizes, file_output):  # todo weig
         prize = prizes[index]
         winners_with_prizes.append(Winner(winner, prize))
 
-    print(f"Zwycięska {how_many} to:")
+    print(f"Zwycięska {len(prizes)} to:")
     for winner_prize in winners_with_prizes:
         print(winner_prize)
         winners_with_prizes_to_json.append(winner_prize.to_dict())
@@ -99,30 +97,30 @@ def draw_winners(participants_list, how_many, prizes, file_output):  # todo weig
 
 
 @click.command()
-@click.option('--participants', default="data/participants1.json",
-              help='Filename with participants, default is data/participants1.json')  # TODO argument pozycyjny
+@click.argument("file_input")
 @click.option('--file_extension', default="json",
               help='Extension of the filename with participants, default is json')
 @click.option('--scheme', default="data/lottery_templates/item_giveaway.json",
               help='Filename with lottery scheme, default is data/lottery_templates/item_giveaway.json')
-@click.option('--how_many_winners', default=3,
-              help='Number of expected winners of the lottery')
-@click.option('--output', default="data/result.json", help='Output json file, default is data/result.json')
-def who_won_lottery(participants, file_extension, scheme, how_many_winners, output):
+@click.option('--file_output', default="data/result.json", help='Output json file, default is data/result.json')
+def who_won_lottery(file_input, file_extension, scheme, file_output):
     click.echo("Witamy w loterii")
 
-    file_content = extract_participants_from_json(participants)
+    if file_extension == "json":
+        file_content = extract_participants_from_json(file_input)
+    elif file_extension == "csv":
+        file_content = extract_participants_from_csv(file_input)
 
     prizes = extract_lottery_scheme(scheme)
 
-    draw_winners(file_content, how_many_winners, prizes, output)
+    draw_winners(file_content, prizes, file_output)
 
-    result = f"(wylosowano z {participants} z użyciem {scheme} i zapisano do {output})"
+    result = f"(wylosowano z {file_input} z użyciem {scheme} i zapisano do {file_output})"
     print(result)
 
 
 if __name__ == "__main__":
-    # '''
+    '''
     file_dir = pathlib.Path("data")
     file_temp = "participants2.csv"
     file_input = f"{file_dir}/{file_temp}"
@@ -145,6 +143,6 @@ if __name__ == "__main__":
     prizes = extract_lottery_scheme(lottery_scheme)
 
     draw_winners(file_content, how_many_winners, prizes, file_output)
-# '''
+'''
 # start script
-#     who_won_lottery()
+    who_won_lottery()
