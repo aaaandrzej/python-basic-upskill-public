@@ -1,11 +1,9 @@
-import pathlib, json, csv
+import json, csv
 import random
 import click
 
-from data import *
 
-
-class Participant:
+class Participant:  #  TODO wydzielić na 3 pliki po klasach + funkcjach ich dotyczących
     def __init__(self, id, first_name, last_name, weight=1):
         self.id = id
         self.first_name = first_name
@@ -14,14 +12,12 @@ class Participant:
 
     def __repr__(self):
         return f"{self.first_name} {self.last_name}"
-        # return f"{self.first_name} {self.last_name} (weight={self.weight})"
 
 
 class Prize:
-    def __init__(self, id, name, amount):
+    def __init__(self, id, name):
         self.id = id
         self.name = name
-        self.amount = amount
 
     def __repr__(self):
         return f"{self.name}"
@@ -61,17 +57,17 @@ def extract_participants_from_csv(filename):
         return participants_list_objects[1:]
 
 
-def extract_lottery_scheme(filename):  # TODO obtestować to
+def extract_prizes_from_scheme(filename):  # TODO obtestować to
     with open(filename) as lottery_scheme_file:
         lottery_scheme = json.load(lottery_scheme_file)
         lottery_prizes_list = []
         for prize in lottery_scheme["prizes"]:
             for amount in range(prize["amount"]):
-                lottery_prizes_list.append(Prize(**prize))
+                lottery_prizes_list.append(Prize(prize["id"], prize["name"]))
         return lottery_prizes_list
 
 
-def draw_winners(participants_list, prizes):
+def draw_winners(participants_list, prizes):  # TODO obtestować to, np kiedy nie ma uczestników albo nagród
 
     participants_list_weights = []
 
@@ -80,9 +76,11 @@ def draw_winners(participants_list, prizes):
 
     winners_list = []
 
+    #  TODO obsłużyć edge case kiedy jest 1 uczestnik a 3 nagrody, lub któregoś 0
+
     while len(winners_list) < len(prizes):
         winner = random.choices(participants_list, weights=participants_list_weights, k=1)
-        if winner not in winners_list:
+        if winner[0] not in winners_list:
             winners_list.append(winner[0])
 
     winners_with_prizes = []
@@ -118,7 +116,7 @@ def print_winners(winners_with_prizes):
 @click.option('--scheme', default="data/lottery_templates/item_giveaway.json",
               help='Filename with lottery scheme, default is data/lottery_templates/item_giveaway.json')
 @click.option('--file_output', default="data/result.json", help='Output json file, default is data/result.json')
-def who_won_lottery(file_input, file_extension, scheme, file_output):
+def main(file_input, file_extension, scheme, file_output):
     click.echo("Witamy w loterii")
 
     if file_extension == "json":
@@ -126,7 +124,7 @@ def who_won_lottery(file_input, file_extension, scheme, file_output):
     elif file_extension == "csv":
         file_content = extract_participants_from_csv(file_input)
 
-    prizes = extract_lottery_scheme(scheme)
+    prizes = extract_prizes_from_scheme(scheme)
 
     winners_with_prizes = draw_winners(file_content, prizes)
 
@@ -141,7 +139,7 @@ def who_won_lottery(file_input, file_extension, scheme, file_output):
 
 if __name__ == "__main__":
 
-    who_won_lottery()  # file_input argument required, e.g.: "python lottery.py participants1.json"
+    main()  # file_input argument required, e.g.: "python lottery.py participants1.json"
 
 '''
 # scripts for testing only - commented by default
@@ -155,7 +153,7 @@ if __name__ == "__main__":
     elif file_extension == "csv":
         file_content = extract_participants_from_csv(file_input)
 
-    prizes = extract_lottery_scheme(scheme)
+    prizes = extract_prizes_from_scheme(scheme)
 
     winners_with_prizes = draw_winners(file_content, prizes)
 
