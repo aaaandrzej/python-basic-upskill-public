@@ -1,5 +1,7 @@
 import random
 import json
+from prize import Prize
+from participant import Participant
 
 
 class Winner:
@@ -15,6 +17,12 @@ class Winner:
 
 
 def draw_winners(participants_list, prizes):  # TODO obtestować to, np kiedy nie ma uczestników albo nagród
+
+    if len(participants_list) < len(prizes):
+        raise ValueError("Za mało uczestników, za dużo nagród")
+
+    if len(prizes) < 1:
+        raise ValueError("Nie mam nagród :(")
 
     participants_list_weights = []
 
@@ -54,3 +62,18 @@ def print_winners(winners_with_prizes):
     print(f"Zwycięska {len(winners_with_prizes)} to:")
     for winner_prize in winners_with_prizes:
         print(winner_prize)
+
+
+if __name__ == "__main__":
+
+    file_output = "result.json"
+
+    file_content = [Participant(1, "Aaa", "Bbb") for _ in range(3)]
+
+    prizes = [Prize("1", "Annual Vim subscription") for _ in range(2)]
+
+    winners_with_prizes = draw_winners(file_content, prizes)
+
+    write_winners_to_json(winners_with_prizes, file_output)
+    print_winners(winners_with_prizes)
+

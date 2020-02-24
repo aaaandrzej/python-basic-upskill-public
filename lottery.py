@@ -6,8 +6,7 @@ from winner import draw_winners, write_winners_to_json, print_winners
 
 @click.command()
 @click.argument("file_input")
-@click.option('--file_extension', default="json",
-              help='Extension of the filename with participants, default is json')
+@click.option('--file_extension', default="json", help='Extension of the filename with participants, default is json')
 @click.option('--scheme', default="data/lottery_templates/item_giveaway.json",
               help='Filename with lottery scheme, default is data/lottery_templates/item_giveaway.json')
 @click.option('--file_output', default="data/result.json", help='Output json file, default is data/result.json')

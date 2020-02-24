@@ -1,4 +1,5 @@
-import json, csv
+import json
+import csv
 
 
 class Participant:
