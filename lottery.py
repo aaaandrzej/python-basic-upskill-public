@@ -9,7 +9,7 @@ def default_scheme_file(directory):
     for item in os.listdir(directory):
         if os.path.isfile(directory + item):
             return directory + item
-    #
+
     # return (directory + item for item in os.listdir(directory) if os.path.isfile(directory + item))  # chciałem tak ale nie działa :)
 
 
