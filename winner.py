@@ -16,11 +16,7 @@ class Winner:
         return {"name": self.name, "prize": self.prize}
 
 
-def draw_winners(participants_list, prizes):  # TODO obtestować to, np kiedy nie ma uczestników albo nagród
-
-    if len(participants_list) < len(prizes):
-        # raise ValueError("Za mało uczestników, za dużo nagród")
-        prizes = prizes[:len(participants_list)]
+def draw_winners(participants_list, prizes):  # TODO obtestować to, np kiedy nie ma uczestników albo nagród - DONE
 
     if len(participants_list) < 1:
         raise ValueError("Nie mam uczestników :(")
@@ -28,26 +24,26 @@ def draw_winners(participants_list, prizes):  # TODO obtestować to, np kiedy ni
     if len(prizes) < 1:
         raise ValueError("Nie mam nagród :(")
 
-    participants_list_weights = []
+    if len(participants_list) < len(prizes):
+        prizes = prizes[:len(participants_list)]
 
-    for winner in participants_list:
-        participants_list_weights.append(int(winner.weight))
+    participants_list_weights = [int(winner.weight) for winner in participants_list ]
 
     winners_list = []
-
-    #  TODO obsłużyć edge case kiedy jest 1 uczestnik a 3 nagrody, lub któregoś 0
 
     while len(winners_list) < len(prizes):
         winner = random.choices(participants_list, weights=participants_list_weights, k=1)
         if winner[0] not in winners_list:
             winners_list.append(winner[0])
 
-    winners_with_prizes = []
+    # winners_with_prizes = []
 
-    for prize in prizes:
-        index = prizes.index(prize)
-        winner = winners_list[index]
-        winners_with_prizes.append(Winner(winner, prize))
+    # for prize in prizes:  # TODO przepisać to z zip i list compr - DONE
+    #     index = prizes.index(prize)
+    #     winner = winners_list[index]
+    #     winners_with_prizes.append(Winner(winner, prize))
+
+    winners_with_prizes = [Winner(name, prize) for name, prize in zip(winners_list, prizes)]
 
     return winners_with_prizes
 
@@ -72,9 +68,9 @@ if __name__ == "__main__":
 
     file_output = "result.json"
 
-    file_content = [Participant(1, "Aaa", "Bbb") for _ in range(0)]
+    file_content = [Participant(1, "Aaa", "Bbb") for _ in range(6)]
 
-    prizes = [Prize("1", "Annual Vim subscription") for _ in range(3)]
+    prizes = [Prize("1", "Annual Vim subscription") for _ in range(7)]
 
     winners_with_prizes = draw_winners(file_content, prizes)
 

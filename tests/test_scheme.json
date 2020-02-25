@@ -1,0 +1,10 @@
+{
+  "name": "Prizes",
+  "prizes": [
+    {
+      "id": 1,
+      "name": "Prize",
+      "amount": 2
+    }
+  ]
+}

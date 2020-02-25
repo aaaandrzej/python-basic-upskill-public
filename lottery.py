@@ -1,13 +1,16 @@
 import click
+import os
 from participant import extract_participants_from_csv, extract_participants_from_json
 from prize import extract_prizes_from_scheme
 from winner import draw_winners, write_winners_to_json, print_winners
 
+default_scheme = ("data/lottery_templates/" + os.listdir("data/lottery_templates")[0])
+
 
 @click.command()
 @click.argument("file_input")
-@click.option('--file_extension', default="json", help='Extension of the filename with participants, default is json')
-@click.option('--scheme', default="data/lottery_templates/item_giveaway.json",
+@click.option('--file_extension', type=click.Choice(['json', 'csv']), default="json", help='Extension of the filename with participants, default is json')  # TODO użyc choices czy jakoś tak - tylko 2 opcje - DONE
+@click.option('--scheme', default=default_scheme,  # TODO powinien pobierać pierwszy alfabetycznie plik z folderu - DONE
               help='Filename with lottery scheme, default is data/lottery_templates/item_giveaway.json')
 @click.option('--file_output', default="data/result.json", help='Output json file, default is data/result.json')
 def main(file_input, file_extension, scheme, file_output):
