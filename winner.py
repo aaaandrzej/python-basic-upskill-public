@@ -19,7 +19,11 @@ class Winner:
 def draw_winners(participants_list, prizes):  # TODO obtestować to, np kiedy nie ma uczestników albo nagród
 
     if len(participants_list) < len(prizes):
-        raise ValueError("Za mało uczestników, za dużo nagród")
+        # raise ValueError("Za mało uczestników, za dużo nagród")
+        prizes = prizes[:len(participants_list)]
+
+    if len(participants_list) < 1:
+        raise ValueError("Nie mam uczestników :(")
 
     if len(prizes) < 1:
         raise ValueError("Nie mam nagród :(")
@@ -68,9 +72,9 @@ if __name__ == "__main__":
 
     file_output = "result.json"
 
-    file_content = [Participant(1, "Aaa", "Bbb") for _ in range(3)]
+    file_content = [Participant(1, "Aaa", "Bbb") for _ in range(0)]
 
-    prizes = [Prize("1", "Annual Vim subscription") for _ in range(2)]
+    prizes = [Prize("1", "Annual Vim subscription") for _ in range(3)]
 
     winners_with_prizes = draw_winners(file_content, prizes)
 
