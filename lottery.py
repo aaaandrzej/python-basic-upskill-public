@@ -4,7 +4,17 @@ from participant import extract_participants_from_csv, extract_participants_from
 from prize import extract_prizes_from_scheme
 from winner import draw_winners, write_winners_to_json, print_winners
 
-default_scheme = ("data/lottery_templates/" + os.listdir("data/lottery_templates")[0])
+
+def default_scheme_file(directory):
+    for item in os.listdir(directory):
+        if os.path.isfile(directory + item):
+            return directory + item
+    #
+    # return (directory + item for item in os.listdir(directory) if os.path.isfile(directory + item))  # chciałem tak ale nie działa :)
+
+
+# default_scheme = ("data/lottery_templates/" + os.listdir("data/lottery_templates")[0])  # zamienione na funkcję powyżej
+default_scheme = default_scheme_file("data/lottery_templates/")
 
 
 @click.command()
@@ -35,3 +45,4 @@ def main(file_input, file_extension, scheme, file_output):
 if __name__ == "__main__":
 
     main()  # file_input argument required, e.g.: "python lottery.py participants1.json"
+    # print(default_scheme_file("data/lottery_templates/"))
