@@ -10,7 +10,7 @@ class Prize:
         return f"{self.name}"
 
 
-def extract_prizes_from_scheme(filename):  # TODO obtestować to - DONE
+def extract_prizes_from_scheme(filename):
     with open(filename) as lottery_scheme_file:
         lottery_scheme = json.load(lottery_scheme_file)
         lottery_prizes_list = []

@@ -64,7 +64,7 @@ class TestWinnerTests:
         prizes = [Prize("1", "Annual Vim subscription")]
         assert len(draw_winners(file_content, prizes)) == 1
 
-    def test_draw_winners_test_more_prizes_then_participants(self):  # TODO poprawić j/w - DONE
+    def test_draw_winners_test_more_prizes_then_participants(self):
         file_content = [Participant(1, "Aaa", "Bbb")]
         prizes = [Prize("1", "Prize"), Prize("1", "Prize")]
         assert len(draw_winners(file_content, prizes)) == 1
@@ -72,4 +72,4 @@ class TestWinnerTests:
 
 if __name__ == "__main__":
 
-    pytest.main()
+    pytest.main()  # testy powinny być uruchamiane z root'a - czyli katalog powyżej (pytest lub python -m pytest)

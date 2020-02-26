@@ -10,17 +10,14 @@ def default_scheme_file(directory):
         if os.path.isfile(directory + item):
             return directory + item
 
-    # return (directory + item for item in os.listdir(directory) if os.path.isfile(directory + item))  # chciałem tak ale nie działa :)
 
-
-# default_scheme = ("data/lottery_templates/" + os.listdir("data/lottery_templates")[0])  # zamienione na funkcję powyżej
 default_scheme = default_scheme_file("data/lottery_templates/")
 
 
 @click.command()
 @click.argument("file_input")
-@click.option('--file_extension', type=click.Choice(['json', 'csv']), default="json", help='Extension of the filename with participants, default is json')  # TODO użyc choices czy jakoś tak - tylko 2 opcje - DONE
-@click.option('--scheme', default=default_scheme,  # TODO powinien pobierać pierwszy alfabetycznie plik z folderu - DONE
+@click.option('--file_extension', type=click.Choice(['json', 'csv']), default="json", help='Extension of the filename with participants, default is json')
+@click.option('--scheme', default=default_scheme,
               help='Filename with lottery scheme, default is data/lottery_templates/item_giveaway.json')
 @click.option('--file_output', default="data/result.json", help='Output json file, default is data/result.json')
 def main(file_input, file_extension, scheme, file_output):
@@ -45,4 +42,3 @@ def main(file_input, file_extension, scheme, file_output):
 if __name__ == "__main__":
 
     main()  # file_input argument required, e.g.: "python lottery.py participants1.json"
-    # print(default_scheme_file("data/lottery_templates/"))
